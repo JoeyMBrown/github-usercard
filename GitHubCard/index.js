@@ -46,7 +46,10 @@ followersArray.forEach((item) => {
   axios.get(`https://api.github.com/users/${item}`)
     .then(res => {
       cardsDiv.appendChild(createCard(res.data));
-    });
+    })
+    .catch(error => {
+      console.log(error);
+    })
 });
 
 /*
