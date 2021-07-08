@@ -1,8 +1,20 @@
+import axios from 'axios';
+
+console.log(axios);
+
 /*
   STEP 1: using axios, send a GET request to the following URL
     (replacing the placeholder with your Github name):
     https://api.github.com/users/<your name>
 */
+
+const cardsDiv = document.querySelector('.cards');
+
+axios.get('https://api.github.com/users/JoeyMBrown')
+  .then(res => {
+    cardsDiv.appendChild(createCard(res.data));
+    console.log(res.data);
+  });
 
 /*
   STEP 2: Inspect and study the data coming back, this is YOUR
@@ -28,7 +40,14 @@
     user, and adding that card to the DOM.
 */
 
-const followersArray = [];
+const followersArray = ['mollybee', 'dannyrb', 'gillijar', 'byang32', 'Kenttleton'];
+
+followersArray.forEach((item) => {
+  axios.get(`https://api.github.com/users/${item}`)
+    .then(res => {
+      cardsDiv.appendChild(createCard(res.data));
+    });
+});
 
 /*
   STEP 3: Create a function that accepts a single object as its only argument.
@@ -49,6 +68,54 @@ const followersArray = [];
       </div>
     </div>
 */
+
+function createCard(data) {
+  const div = document.createElement('div');
+  div.classList.add('card');
+
+  const img = document.createElement('img');
+  img.setAttribute("src", `${data.avatar_url}`);
+
+  const infoDiv = document.createElement('div');
+  infoDiv.classList.add('card-info');
+
+  const h3 = document.createElement('h3');
+  h3.classList.add('name');
+  h3.textContent = data.name;
+
+  const pUser = document.createElement('p');
+  pUser.classList.add('username');
+  pUser.textContent = data.login;
+
+  const pLocation = document.createElement('p');
+  pLocation.textContent = `Location: ${data.location}`;
+
+  const pProfile = document.createElement('p');
+  pProfile.textContent = 'Profile: ';
+
+  const profileLink = document.createElement('a');
+  profileLink.setAttribute("href", `${data.html_url}`);
+  profileLink.textContent = `${data.html_url}`;
+
+  const pFollowers = document.createElement('p');
+  pFollowers.textContent = `Followers: ${data.followers}`;
+
+  const pFollowing = document.createElement('p');
+  pFollowing.textContent = `Following: ${data.following}`;
+
+  const pBio = document.createElement('p');
+  pBio.textContent = `Bio: ${data.bio}`;
+
+  const infoDivChildren = [h3, pUser, pLocation, pProfile, pFollowers, pFollowing, pBio];
+
+  infoDivChildren.forEach((item) => { infoDiv.appendChild(item); });
+
+  div.appendChild(img);
+  div.appendChild(infoDiv);
+  pProfile.appendChild(profileLink);
+
+  return div;
+}
 
 /*
   List of LS Instructors Github username's:
